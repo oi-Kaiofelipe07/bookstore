@@ -5,7 +5,7 @@ from rest_framework.test import APIClient, APITestCase
 from rest_framework.views import status
 
 from product.factories import CategoryFactory
-from product.models import Category
+from product.models import Category, Product
 
 
 class CategoryViewSet(APITestCase):
@@ -22,7 +22,7 @@ class CategoryViewSet(APITestCase):
         category_data = json.loads(response.content)
 
         self.assertEqual(category_data["results"]
-                         [0]["title"], self.category.title)
+                        [0]["title"], self.category.title)
 
     def test_create_category(self):
         data = json.dumps({"title": "technology"})
