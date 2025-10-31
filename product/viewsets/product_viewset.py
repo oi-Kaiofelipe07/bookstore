@@ -3,7 +3,6 @@ from rest_framework.viewsets import ModelViewSet
 from product.models import Product
 from product.Serializers.product_Serializers import ProductSerializer
 
-
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
 
