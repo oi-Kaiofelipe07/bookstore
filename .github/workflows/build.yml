@@ -10,6 +10,18 @@ jobs:
         python-version: ["3.11", "3.12"]
         poetry-version: ["1.8.2"]
 
+    # Configura um serviço PostgreSQL para os testes
+    services:
+      postgres:
+        image: postgres:13.0-alpine
+        env:
+          POSTGRES_USER: bookstore_dev
+          POSTGRES_PASSWORD: bookstore_dev
+          POSTGRES_DB: bookstore_dev_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     runs-on: ubuntu-latest
 
     steps:
@@ -31,5 +43,12 @@ jobs:
       run: poetry install
 
     - name: Test
+      # Define as variáveis de ambiente para a conexão com o banco de dados durante os testes
+      env:
+        SQL_DATABASE: bookstore_dev_db
+        SQL_USER: bookstore_dev
+        SQL_PASSWORD: bookstore_dev
+        SQL_HOST: localhost # O serviço 'postgres' é acessível via 'localhost' dentro do job
+        SQL_PORT: 5432
       run: |
         poetry run python manage.py test
