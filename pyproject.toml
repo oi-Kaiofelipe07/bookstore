@@ -1,5 +1,5 @@
 [project]
-name = "bookstore"
+name = "PROJETO_DJANGO"
 version = "0.1.0"
 description = "BookStore API"
 authors = [
