@@ -7,50 +7,47 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12"]
-        poetry-version: ["1.8.2"]
+        python-version: [3.12]
+
+    runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres:13.0-alpine
+      db:
+        image: postgres:16.0-alpine
+        ports:
+          - 5434:5432
         env:
           POSTGRES_USER: bookstore_dev
           POSTGRES_PASSWORD: bookstore_dev
           POSTGRES_DB: bookstore_dev_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set working directory to repository root
-      run: pwd
-      working-directory: .
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
-    - name: Install poetry ${{ matrix.poetry-version }}
-      run: |
-        pipx install poetry==${{ matrix.poetry-version }}
+      - name: Install poetry
+        run: |
+          python -m ensurepip
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade poetry
 
-    - name: Install dependencies (root folder)
-      working-directory: .
-      run: poetry install
+      - name: Install dependencies
+        working-directory: ./
+        run: poetry install
 
-    - name: Run tests
-      working-directory: .
-      env:
-        SQL_DATABASE: bookstore_dev_db
-        SQL_USER: bookstore_dev
-        SQL_PASSWORD: bookstore_dev
-        SQL_HOST: localhost
-        SQL_PORT: 5432
-      run: |
-        poetry run python manage.py test
+      - name: Start Docker Compose services
+        working-directory: ./
+        run: docker-compose up -d --build
+
+      - name: Run Tests
+        working-directory: ./
+        run: docker-compose exec -T web python manage.py test
