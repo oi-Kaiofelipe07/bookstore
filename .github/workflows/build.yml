@@ -41,13 +41,13 @@ jobs:
           python -m pip install --upgrade poetry
 
       - name: Install dependencies
-        working-directory: ./
-        run: poetry install
+        working-directory: ./projeto_django
+        run: poetry install --no-interaction
 
       - name: Start Docker Compose services
-        working-directory: ./
+        working-directory: ./projeto_django
         run: docker-compose up -d --build
 
       - name: Run Tests
-        working-directory: ./
+        working-directory: ./projeto_django
         run: docker-compose exec -T web python manage.py test

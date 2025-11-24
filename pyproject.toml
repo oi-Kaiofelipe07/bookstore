@@ -9,8 +9,12 @@ readme = "README.md"
 requires-python = ">=3.11"
 
 packages = [
+    { include = "api" },
+    { include = "order" },
+    { include = "product" },
     { include = "bookstore" }
 ]
+
 
 dependencies = [
     "pytest (>=8.4.2,<9.0.0)",
