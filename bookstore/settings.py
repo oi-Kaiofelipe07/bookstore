@@ -154,7 +154,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-default-ci-key-change-this")
 
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
