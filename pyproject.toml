@@ -15,7 +15,6 @@ packages = [
     { include = "bookstore" }
 ]
 
-
 dependencies = [
     "pytest (>=8.4.2,<9.0.0)",
     "factory-boy (>=3.3.3,<4.0.0)",
@@ -28,6 +27,9 @@ dependencies = [
     "whitenoise (>=6.11.0,<7.0.0)",
     "psycopg2-binary (>=2.9.11,<3.0.0)"
 ]
+
+[tool.poetry]
+package-mode = true
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
